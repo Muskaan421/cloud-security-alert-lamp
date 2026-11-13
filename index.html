@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Security Alert Lamp</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            color: #172033;
+        }
+
+        header {
+            background: #14213d;
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .notice {
+            background: #fff4cc;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            margin: 18px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0001;
+        }
+
+        .lamp {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            background: #16a34a;
+        }
+
+        .lamp.alert {
+            background: #dc2626;
+            box-shadow: 0 0 15px #dc262688;
+        }
+
+        button {
+            border: 0;
+            border-radius: 7px;
+            padding: 12px 16px;
+            margin: 5px;
+            color: white;
+            background: #2563eb;
+            cursor: pointer;
+        }
+
+        button.reset {
+            background: #475569;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .danger {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .normal {
+            color: #15803d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Cloud Security Alert Lamp</h1>
+    <p>Security Activity Monitoring Dashboard</p>
+</header>
+
+<main>
+    <p class="notice">
+        DEMO MODE: Events are simulated. This dashboard is not connected
+        to live AWS logs.
+    </p>
+
+    <section class="panel">
+        <h2>Security Status</h2>
+
+        <span class="lamp {% if alert_active %}alert{% endif %}"></span>
+
+        {% if alert_active %}
+            <span class="danger">SECURITY ALERT ACTIVE</span>
+            <p>Three or more simulated failed sign-ins detected.</p>
+        {% else %}
+            <span class="normal">SYSTEM NORMAL</span>
+            <p>Alert threshold has not been reached.</p>
+        {% endif %}
+
+        <p>Failed sign-in attempts: <strong>{{ failed_logins }}</strong></p>
+
+        <form action="/simulate" method="post">
+            <button type="submit">Simulate Failed Sign-in</button>
+        </form>
+
+        <form action="/reset" method="post">
+            <button class="reset" type="submit">Reset Demo</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Recent Security Events</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Event</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in events %}
+                <tr>
+                    <td>{{ item.time }}</td>
+                    <td>{{ item.event }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
